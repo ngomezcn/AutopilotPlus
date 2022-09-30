@@ -51,7 +51,16 @@ private:
 				boost::asio::placeholders::error,
 				boost::asio::placeholders::bytes_transferred));
 
-		std::cout << std::hex << recv_buffer_[0] << std::endl;
+		unsigned int u = 0;
+		int i = 0;
+		while (i < sizeof(RPOS) - 40) {
+			u = recv_buffer_[i];
+
+			std::cout << (int)recv_buffer_[i] << std::endl;
+
+
+			i++;
+		}
 
 		/*for (size_t i = 0; recv_buffer_[i] != '\0'; i++)
 		{
