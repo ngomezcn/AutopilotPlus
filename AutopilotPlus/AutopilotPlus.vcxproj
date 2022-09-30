@@ -133,6 +133,13 @@
   <ItemGroup>
     <ClCompile Include="AutopilotPlus.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="RPOS.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AutopilotPlus.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

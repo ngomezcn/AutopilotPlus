@@ -6,15 +6,38 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/asio.hpp>
+#include <iomanip>
+#include <sstream>
 
-using boost::asio::ip::udp;
+#include "RPOS.h"
+using namespace boost;
+using namespace boost::asio::ip;
+
+void convert_to_struct(std::istream& ip, unsigned char* data, int size)
+{
+	// Get the line we want to process
+	std::string line;
+	std::getline(ip, line);
+
+	std::istringstream ip_convert(line);
+	ip_convert >> std::hex;
+
+	// Read in unsigned ints, as wrote out hex version
+	// of ascii code
+	unsigned int u = 0;
+	int i = 0;
+
+	while ((ip_convert >> u) && (i < size))
+		if ((0x00 <= u) && (0xff >= u))
+			data[i++] = static_cast<unsigned char>(u);
+}
 
 class udp_server
 {
 public:
-	udp_server(boost::asio::io_service& io_service)
-		: socket_(io_service, udp::endpoint(udp::v4(), 13))
-	{
+	udp_server(udp::socket socket)
+		: socket_(std::move(socket)) {
+
 		start_receive();
 	}
 
@@ -27,6 +50,15 @@ private:
 			boost::bind(&udp_server::handle_receive, this,
 				boost::asio::placeholders::error,
 				boost::asio::placeholders::bytes_transferred));
+
+		std::cout << std::hex << recv_buffer_[0] << std::endl;
+
+		/*for (size_t i = 0; recv_buffer_[i] != '\0'; i++)
+		{
+			std::cout << std::hex << (int)recv_buffer_[i] << "-";
+		}
+		std::cout << std::endl;*/
+
 	}
 
 	void handle_receive(const boost::system::error_code& error,
@@ -34,7 +66,7 @@ private:
 	{
 		if (!error || error == boost::asio::error::message_size)
 		{
-			boost::shared_ptr<std::string> message(new std::string("thx bro"));
+			boost::shared_ptr<std::string> message(new std::string("Just a response bro"));
 
 			socket_.async_send_to(boost::asio::buffer(*message), remote_endpoint_,
 				boost::bind(&udp_server::handle_send, this, message,
@@ -49,12 +81,13 @@ private:
 		const boost::system::error_code& /*error*/,
 		std::size_t /*bytes_transferred*/)
 	{
-		std::cout << message << std::endl;
 	}
 
 	udp::socket socket_;
 	udp::endpoint remote_endpoint_;
-	boost::array<char, 1> recv_buffer_;
+	//boost::array<unsigned char, 4> recv_buffer_;
+	//char recv_buffer_[1500 + 1];
+	unsigned char recv_buffer_[1500 + 1];
 };
 
 int main()
@@ -62,7 +95,9 @@ int main()
 	try
 	{
 		boost::asio::io_service io_service;
-		udp_server server(io_service);
+
+		udp::socket socket(io_service, udp::endpoint(udp::v4(), 13));
+		udp_server server(std::move(socket));
 		io_service.run();
 	}
 	catch (std::exception& e)
