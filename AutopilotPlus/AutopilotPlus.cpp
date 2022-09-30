@@ -51,23 +51,14 @@ private:
 				boost::asio::placeholders::error,
 				boost::asio::placeholders::bytes_transferred));
 
-		unsigned int u = 0;
-		int i = 0;
-		while (i < sizeof(RPOS) - 40) {
-			u = recv_buffer_[i];
+		unsigned char* data = reinterpret_cast<unsigned char*>(&rpos);
 
-			std::cout << (int)recv_buffer_[i] << std::endl;
-
-
-			i++;
-		}
-
-		/*for (size_t i = 0; recv_buffer_[i] != '\0'; i++)
+		for (size_t i = 0; i < sizeof(RPOS); i++)
 		{
-			std::cout << std::hex << (int)recv_buffer_[i] << "-";
+			data[i] = recv_buffer_[i];
 		}
-		std::cout << std::endl;*/
 
+		std::cout << rpos.dat_lon << std::endl;
 	}
 
 	void handle_receive(const boost::system::error_code& error,
