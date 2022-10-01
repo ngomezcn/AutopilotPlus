@@ -33,12 +33,11 @@ public:
 		remote_endpoint_ = *resolver.resolve(query);
 	}
 
-	void send(char* msg)
+	void send(unsigned char *msg, int size)
 	{
 		boost::shared_ptr<std::string> message(new std::string("Just a response bro"));
-		const unsigned char ss[] = { 205, 133, 91, 174, 110, 138, 0, 64 };
 
-		socket_.async_send_to(boost::asio::buffer(*message), remote_endpoint_,
+		socket_.async_send_to(boost::asio::buffer(msg, size), remote_endpoint_,
 			boost::bind(&UDPClient::handle_send, this, message,
 				boost::asio::placeholders::error,
 				boost::asio::placeholders::bytes_transferred));

@@ -19,15 +19,15 @@ using namespace boost::asio::ip;
 #include "sim.h"
 
 
-unsigned char* struct_to_hex_array(void* _struct)
-{
-    return reinterpret_cast<unsigned char*>(&_struct);
-}
-
 int main()
 {
-    boost::asio::io_service io_service;
-    UDPClient client(io_service, "192.168.8.103", "59679");
+    boost::asio::io_service client_io_service;
+    UDPClient client(client_io_service, "192.168.8.103", "55272");
+
+	boost::asio::io_service server_io_service;
+    UDPServer server(server_io_service, 13);
+    server_io_service.run();
+
 
     char a[400] = "sim/flightmodel/position/latitude";
     DREF_IN latitude(1, 5, a);
@@ -41,14 +41,10 @@ int main()
 
     for (size_t i = 0; i < sizeof(msg); i++)
     {
-        std::cout << std::hex << (int)msg[i] << " ";
+        //std::cout << std::hex << (int)msg[i] << " ";
     }
 
-    /* std::ostringstream op;
-     convert_to_hex_string(op, reinterpret_cast<const unsigned char*>(&latitude), sizeof(DREF_IN));
-     std::string output = op.str();
-     std::cout << "After conversion from struct to hex string:\n" << output << std::endl;*/
-
+    client.send(msg, sizeof(msg));
 
      //client.send(a);
 
@@ -64,9 +60,7 @@ int main()
      //	io_service.run();
 
 
-     //	//UDPClient client(io_service, "localhost", "1337");
-
-     //	//client.send("Hello, World!");
+   
 
 
      //}

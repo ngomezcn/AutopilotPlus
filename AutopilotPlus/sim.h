@@ -2,33 +2,31 @@
 
 #include <iostream>
 
-struct writablesimvar {
+struct writable_simvar {
 
-	const char* path = "sim/aircraft/autopilot/";
+	const char* path_ = "";
+	float dref_value_ = .0f;
+
+public:
+	
+	float get() {
+		return dref_value_;
+	}
+
+	void set(float dref_value) {
+		dref_value_ = dref_value;
+	}
+
+	writable_simvar(const char* path) {
+		path_ = path;
+	}
 };
 
 namespace sim {
-	const std::string dref_root;
-
 	namespace cockpit {
-		const std::string header = "cockpit";
-
-		class autopilot {
-
-		public:
-			std::string path = dref_root + header;
-
-		} autopilot;
-	}
-
-	namespace flightmodel {
-		const  std::string header = "flightmodel";
-
-		class controls {
-		public:
-			std::string path = dref_root + header;
-
-		} controls;
+		namespace autopilot {
+				writable_simvar autopilot_mode("sim/cockpit/autopilot/autopilot_mode");
+		};
 	}
 }
 
