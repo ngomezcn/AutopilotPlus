@@ -144,8 +144,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="RPOS.h" />
     <ClInclude Include="sim.h" />
-    <ClInclude Include="UDPClient.hpp" />
-    <ClInclude Include="UDPServer.hpp" />
+    <ClInclude Include="UDPService.h" />
     <ClInclude Include="xplane_types.h" />
   </ItemGroup>
   <ItemGroup>

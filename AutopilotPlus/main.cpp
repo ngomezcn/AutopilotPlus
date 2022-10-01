@@ -1,54 +1,49 @@
-#include <ctime>
 #include <iostream>
-#include <string>
-#include <boost/array.hpp>
-#include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/asio.hpp>
-#include <iomanip>
-#include <sstream>
-#include <sstream>
-#include <string>
+#include "UDPService.h"
+#include "DREF_IN.h"
 
 using namespace boost;
-using namespace boost::asio::ip;
-
-#include "UDPServer.hpp"
-#include "UDPClient.hpp"
-#include "DREF_IN.h"
-#include "sim.h"
-
 
 int main()
 {
-    boost::asio::io_service client_io_service;
-    UDPClient client(client_io_service, "192.168.8.103", "55272");
+	try
+	{
+		boost::asio::io_service io_service;
+		UDPService udp_service(io_service, 
+            "192.168.8.103", "49000",
+             7777);
+		std::cout << "Starting:" << std::endl;
 
-	boost::asio::io_service server_io_service;
-    UDPServer server(13);
+	    char a[400] = "sim/flightmodel/position/latitude";
+	    DREF_IN latitude(1, 5, a);
+	    unsigned char* data = reinterpret_cast<unsigned char*>(&latitude);
+	    unsigned char header[] = "RREF";
+	    unsigned char msg[sizeof(header) + sizeof(DREF_IN)];
 
-	boost::thread th(&UDPServer::run_service, &server);
-    //server_io_service.run();
+	    memcpy(msg, header, sizeof(header));
+	    memcpy(msg + sizeof(header), data, sizeof(DREF_IN));
 
-    std::cout << "Starting:" << std::endl;
+	    for (size_t i = 0; i < sizeof(msg); i++)
+	    {
+	       // std::cout << std::hex << (int)msg[i] << " ";
+	    }
+        udp_service.send(msg, sizeof(msg));
 
-    char a[400] = "sim/flightmodel/position/latitude";
-    DREF_IN latitude(1, 5, a);
-    unsigned char* data = reinterpret_cast<unsigned char*>(&latitude);
-    unsigned char header[] = "RREF";
-    unsigned char msg[sizeof(header) + sizeof(DREF_IN)];
+        io_service.run();
 
-    memcpy(msg, header, sizeof(header));
-    memcpy(msg + sizeof(header), data, sizeof(DREF_IN));
 
-    for (size_t i = 0; i < sizeof(msg); i++)
-    {
-       // std::cout << std::hex << (int)msg[i] << " ";
-    }
+		//th.join();
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
+	//boost::asio::io_service io_service;
+    //UDPClient client(std::move(socket), "192.168.8.103", "55272");
 
-    client.send(msg, sizeof(msg));
 
-	th.join();
+    
+
 
 
      //client.send(a);

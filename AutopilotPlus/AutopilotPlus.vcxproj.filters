@@ -38,14 +38,11 @@
     <ClInclude Include="xplane_types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UDPServer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UDPClient.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sim.h">
       <Filter>models</Filter>
+    </ClInclude>
+    <ClInclude Include="UDPService.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
