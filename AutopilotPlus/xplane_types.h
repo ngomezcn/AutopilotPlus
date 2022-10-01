@@ -1,6 +1,8 @@
 #ifndef XPLANE_TYPES_H
 #define XPLANE_TYPES_H
 
+#define HEADER_RREF "RREF,"
+
 typedef int32_t xint;
 typedef char xchr;
 typedef float xflt;

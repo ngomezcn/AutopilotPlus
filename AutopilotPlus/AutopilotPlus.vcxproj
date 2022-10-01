@@ -141,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DREF_IN.h" />
+    <ClInclude Include="DREF_REQ.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RPOS.h" />
     <ClInclude Include="sim.h" />

@@ -32,7 +32,7 @@
     <ClInclude Include="RPOS.h">
       <Filter>models</Filter>
     </ClInclude>
-    <ClInclude Include="DREF_IN.h">
+    <ClInclude Include="DREF_REQ.h">
       <Filter>models</Filter>
     </ClInclude>
     <ClInclude Include="xplane_types.h">
@@ -43,6 +43,9 @@
     </ClInclude>
     <ClInclude Include="UDPService.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DREF_IN.h">
+      <Filter>models</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

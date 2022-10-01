@@ -14,6 +14,8 @@
 #include <sstream>
 
 #include "RPOS.h"
+#include "xplane_types.h"
+#include "DREF_IN.h"
 
 using namespace boost;
 using namespace boost::asio::ip;
@@ -29,7 +31,6 @@ public:
 		int sport
 	) : socket_(io_service, udp::endpoint(udp::v4(), sport))
 	{
-
 		udp::resolver resolver(io_service);
 		udp::resolver::query query(udp::v4(), host, cport);
 		xplane_endpoint_ = *resolver.resolve(query);
@@ -40,7 +41,9 @@ public:
 	void send(unsigned char* msg, int size)
 	{
 		std::cout << "We send " << size << " bytes" << std::endl;
-
+		for (size_t i = 0; i < size; i++)
+			std::cout << std::hex << (int)msg[i] << " ";
+		std::cout << std::endl;
 		socket_.async_send_to(boost::asio::buffer(msg, size), xplane_endpoint_,
 			boost::bind(&UDPService::handle_send, this,
 				msg,
@@ -52,7 +55,6 @@ private:
 
 	void start_receive()
 	{
-		std::cout << remote_endpoint_.port() << std::endl;
 		socket_.async_receive_from(
 			boost::asio::buffer(recv_buffer_),
 			remote_endpoint_,
@@ -63,18 +65,27 @@ private:
 	void handle_receive(const boost::system::error_code& error,
 		std::size_t /*bytes_transferred*/)
 	{
-		std::cout << remote_endpoint_.port() << std::endl;
-
 		if (!error || error == boost::asio::error::message_size)
 		{
-			unsigned char* data = reinterpret_cast<unsigned char*>(&recv_buffer_);
-
+			char header[6] = "";
 			for (size_t i = 0; i < 5; i++)
-			{
-				std::cout << recv_buffer_[i] << " ";
-			}
-			std::cout << std::endl;
+				header[i] = recv_buffer_[i];
+			
+			const char a[] = "RREF,";
 
+			if (strcmp(a, header) == 0)
+			{
+				unsigned char* dref_in_ = reinterpret_cast<unsigned char*>(&dref_in);
+
+				for (size_t i = 5; i < sizeof(DREF_IN)+5; i++)
+				{
+					dref_in_[i-5] = recv_buffer_[i];
+					//std::cout << std::hex << (int)recv_buffer_[i] << " ";
+				}
+				//std::cout << std::endl;
+				std::cout << dref_in.dref_sender_index << " - " << dref_in.dref_flt_value << std::endl;
+
+			}
 			start_receive();
 		}
 	}
