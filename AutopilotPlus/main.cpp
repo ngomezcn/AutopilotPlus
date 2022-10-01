@@ -25,13 +25,15 @@ int main()
     UDPClient client(client_io_service, "192.168.8.103", "55272");
 
 	boost::asio::io_service server_io_service;
-    UDPServer server(server_io_service, 13);
-    server_io_service.run();
+    UDPServer server(13);
 
+	boost::thread th(&UDPServer::run_service, &server);
+    //server_io_service.run();
+
+    std::cout << "Starting:" << std::endl;
 
     char a[400] = "sim/flightmodel/position/latitude";
     DREF_IN latitude(1, 5, a);
-
     unsigned char* data = reinterpret_cast<unsigned char*>(&latitude);
     unsigned char header[] = "RREF";
     unsigned char msg[sizeof(header) + sizeof(DREF_IN)];
@@ -41,10 +43,13 @@ int main()
 
     for (size_t i = 0; i < sizeof(msg); i++)
     {
-        //std::cout << std::hex << (int)msg[i] << " ";
+       // std::cout << std::hex << (int)msg[i] << " ";
     }
 
     client.send(msg, sizeof(msg));
+
+	th.join();
+
 
      //client.send(a);
 

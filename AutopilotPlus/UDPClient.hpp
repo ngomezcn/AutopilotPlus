@@ -26,7 +26,7 @@ public:
 		boost::asio::io_service& io_service,
 		const char* host,
 		const char* port
-	) : socket_(io_service, udp::endpoint(udp::v4(), 0))
+	) : socket_(io_service, udp::endpoint(udp::v4(), 7777))
 	{
 		udp::resolver resolver(io_service);
 		udp::resolver::query query(udp::v4(), host, port);
@@ -35,6 +35,7 @@ public:
 
 	void send(unsigned char *msg, int size)
 	{
+		std::cout << "We send " << size << " bytes" << std::endl;
 		boost::shared_ptr<std::string> message(new std::string("Just a response bro"));
 
 		socket_.async_send_to(boost::asio::buffer(msg, size), remote_endpoint_,
