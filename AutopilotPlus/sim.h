@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <iostream>
 
 struct writablesimvar {
@@ -8,35 +7,28 @@ struct writablesimvar {
 	const char* path = "sim/aircraft/autopilot/";
 };
 
-
 namespace sim {
-	using namespace std;
+	const std::string dref_root;
 
 	namespace cockpit {
-		const string header = "cockpit";
+		const std::string header = "cockpit";
 
 		class autopilot {
 
 		public:
-			string path = header;
+			std::string path = dref_root + header;
 
 		} autopilot;
 	}
 
 	namespace flightmodel {
-		const string header = "flightmodel";
+		const  std::string header = "flightmodel";
 
 		class controls {
 		public:
-			string path = header;
+			std::string path = dref_root + header;
 
 		} controls;
 	}
 }
 
-void mmain() {
-
-	std::cout << sim::cockpit::autopilot.path << std::endl;
-	std::cout << sim::flightmodel::controls.path << std::endl;
-	
-}
