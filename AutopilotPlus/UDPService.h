@@ -36,8 +36,6 @@ public:
 		udp::resolver::query query(udp::v4(), host, cport);
 		xplane_endpoint_ = *resolver.resolve(query);
 		start_receive();
-		std::cout << " UDPSERVER " << std::endl;
-
 	}
 
 	void send(unsigned char* msg, int size)

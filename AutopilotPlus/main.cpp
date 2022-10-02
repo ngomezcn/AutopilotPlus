@@ -30,11 +30,9 @@ int main()
 	{
 		initial_datarefs_request();
 		udp_service.init_service();
-		
 
 		while (true){
 			local_y.set(500);
-
 			//std::cout << elevation.get() << " - " << latitude.get() << " - " << longitude.get() << '\r';
 		}
 	}
