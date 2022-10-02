@@ -35,6 +35,10 @@ void initial_datarefs_request() {
 }
 using namespace sim::flightmodel::position;
 
+// TODO: Global class
+// Crear clasee Application (nombre no definitivo) que contendra todas las actuales variables globales como miembros.
+// Sera el punto de entrada de la aplicacion.
+ 
 
 int main()
 {
