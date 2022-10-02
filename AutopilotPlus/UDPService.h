@@ -97,7 +97,7 @@ private:
 				{
 					dref_in_[i-header_size] = recv_buffer_[i];
 				}
-				std::cout << dref_in.sender_index << " - " << dref_in.flt_value << std::endl;
+				//std::cout << dref_in.sender_index << " - " << dref_in.flt_value << std::endl;
 
 				(*DATAREFS_MAP[dref_in.sender_index]).value_ = dref_in.flt_value;
 			}

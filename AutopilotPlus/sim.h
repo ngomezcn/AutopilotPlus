@@ -4,7 +4,7 @@
 #include <iostream>
 #include "DREF_REQ.h"
 
-#define DEFAULT_DREF_FREQ 1
+#define DEFAULT_DREF_FREQ 100
 
 struct simvar
 {
@@ -21,9 +21,6 @@ public:
 		rref = DREF_REQ(dref_freq_, id, path);
 	}
 
-	void* xd() {
-		return this;
-	}
 
 	float get() {
 		return value_;
@@ -46,14 +43,16 @@ namespace sim {
 	namespace flightmodel {
 		namespace position {
 			simvar latitude("sim/flightmodel/position/latitude", 0);
-			simvar longitude("sim/flightmodel/position/longitude", 1);
+			simvar longitude("sim/flightmodel/position/longitude", 0);
+			simvar elevation("sim/flightmodel/position/elevation", 100);
 		}
 	}
 }
 
 std::vector<simvar*> DATAREFS_TO_LOAD {
 	&sim::flightmodel::position::longitude,
-	&sim::flightmodel::position::latitude
+	&sim::flightmodel::position::latitude,
+	&sim::flightmodel::position::elevation
 };
 
 std::map<int, simvar*> DATAREFS_MAP;
