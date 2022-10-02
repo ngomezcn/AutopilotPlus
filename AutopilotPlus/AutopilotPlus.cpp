@@ -1,3 +1,4 @@
+#pragma once
 //
 //#include <ctime>
 //#include <iostream>
@@ -12,24 +13,15 @@
 //using namespace boost;
 //using namespace boost::asio::ip;
 //
-//#include "UDPServer.hpp"
+////#include "UDPServer.hpp"
+////
+//#include <iostream>
 //
-//class AutopilotPlus {
+//extern class AutopilotPlus {
 //
 //public:
-//	void init() {
-//
-//		boost::asio::io_service io_service;
-//		try
-//		{
-//			//udp::socket socket(io_service, udp::endpoint(udp::v4(), 13));
-//			//UDPServer server(std::move(socket));
-//			//io_service.run();
-//		}
-//		catch (std::exception& e)
-//		{
-//			std::cerr << e.what() << std::endl;
-//		}
-//	}
-//};
+//	AutopilotPlus() {
+//		std::cout << "asdsad" << std::endl;
+//	};
+//} autopilotplus;
 //

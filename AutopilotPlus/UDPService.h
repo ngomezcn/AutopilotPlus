@@ -21,16 +21,26 @@
 using namespace boost;
 using namespace boost::asio::ip;
 
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 class UDPService
 {
 public:
-
+	
 	UDPService(
 		const char* host,
 		const char* cport,
 		int sport
 	) : socket_(io_service, udp::endpoint(udp::v4(), sport))
 	{
+		spdlog::set_pattern("[%t] %^[%l]%$ %v");
+		spdlog::set_level(spdlog::level::debug);
+
+		spdlog::critical("Created UDPService");
+		spdlog::error("Created UDPService");
+		spdlog::info("Created UDPService");
+		spdlog::debug("Created UDPService");
+		spdlog::trace("Created UDPService");
 
 		udp::resolver resolver(io_service);
 		udp::resolver::query query(udp::v4(), host, cport);
@@ -40,7 +50,6 @@ public:
 
 	void send(unsigned char* msg, int size)
 	{
-		std::cout << "Send " << size << " bytes" << std::endl;
 		socket_.send_to(boost::asio::buffer(msg, size), xplane_endpoint_);
 	}
 
@@ -55,6 +64,9 @@ public:
 	}
 	
 	void init_service() {
+
+		LOG_DEBUG("init_service(): ")
+
 		boost::thread th(&UDPService::run_service, this);
 		th.detach();
 		Sleep(100);
@@ -63,7 +75,8 @@ public:
 private:
 	void run_service()
 	{
-		std::cout << "\nIniciando servidor UDP" << std::endl; \
+		LOG_DEBUG("run_service(): ")
+
 		try {
 			this->io_service.run();
 		}
@@ -82,12 +95,16 @@ private:
 	}
 	void handle_receive(const boost::system::error_code& error, std::size_t size/*bytes_transferred*/)
 	{
+		LOG_DEBUG("run_service(): ")
+			std::cout << "wtf";
+
 		if (!error || error == boost::asio::error::message_size)
 		{
 			char header[6] = "";
 			for (size_t i = 0; i < 5; i++)
 				header[i] = recv_buffer_[i];
 			
+			//TODO: Hace esto mas de manera que acepte otro tipo de headers.
 			const char a[] = "RREF,";
 			if (strcmp(a, header) == 0)
 			{
@@ -117,13 +134,12 @@ private:
 				}
 			}
 			start_receive();
-		}
+		} else { LOG_ERROR("handle_receive(): {}", error.message()) }
 	}
 
 	void handle_send(unsigned char* message/*message*/, int size,
 		const boost::system::error_code& /*error*/, std::size_t /*bytes_transferred*/)
 	{
-		std::cout << "Send " << size << " bytes" << std::endl;
 
 	}
 
