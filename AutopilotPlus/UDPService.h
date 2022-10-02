@@ -13,10 +13,10 @@
 #include <boost/asio.hpp>
 #include <iomanip>
 #include <sstream>
-
 #include "xplane_types.h"
+
 #include "DREF_INPUT.h"
-#include "datarefs_loader.h"
+#include "datarefs_map.h"
 
 using namespace boost;
 using namespace boost::asio::ip;
@@ -31,10 +31,13 @@ public:
 		int sport
 	) : socket_(io_service, udp::endpoint(udp::v4(), sport))
 	{
+
 		udp::resolver resolver(io_service);
 		udp::resolver::query query(udp::v4(), host, cport);
 		xplane_endpoint_ = *resolver.resolve(query);
 		start_receive();
+		std::cout << " UDPSERVER " << std::endl;
+
 	}
 
 	void send(unsigned char* msg, int size)
@@ -56,7 +59,7 @@ public:
 	void init_service() {
 		boost::thread th(&UDPService::run_service, this);
 		th.detach();
-		Sleep(500);
+		Sleep(100);
 	}
 
 private:

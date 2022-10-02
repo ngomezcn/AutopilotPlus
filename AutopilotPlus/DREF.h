@@ -11,12 +11,14 @@ private:
 	static int serial_id;
 public:
 	int id;
-	DREF_REQUEST rref;
+	const char* path_;
+	DREF_REQUEST dref_req;
 	float value_ = .0f;
 
-	DREF(const char* path, int dref_freq_ = DEFAULT_DREF_FREQ) : id(serial_id++) {
+	DREF(const char* path, int dref_freq = DEFAULT_DREF_FREQ) : id(serial_id++) {
 		id = serial_id;
-		rref = DREF_REQUEST(dref_freq_, id, path);
+		path_ = path;
+		dref_req = DREF_REQUEST(dref_freq, id, path);
 	}
 
 	float get() {

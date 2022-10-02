@@ -140,6 +140,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="datarefs_map.h" />
     <ClInclude Include="DREF_INPUT.h" />
     <ClInclude Include="DREF_OUTPUT.h" />
     <ClInclude Include="DREF_REQUEST.h" />

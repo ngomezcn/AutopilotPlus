@@ -19,6 +19,5 @@ std::vector<DREF*> DREFs_TO_REQUEST {
 		&latitude,
 		&longitude
 };
-std::map<int, DREF*> DATAREFS_MAP;
 
 #endif /* DATAREFS_DEFINITION */

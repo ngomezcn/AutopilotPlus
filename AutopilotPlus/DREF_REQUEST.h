@@ -9,7 +9,6 @@ extern struct DREF_REQUEST
 	xint dref_sender_index_;	// the index the customer is using to define this dataref
 	xchr dref_string_[400]; // dataref string that you want X-Plane to send to you!
 
-
 	DREF_REQUEST(
 		xint dref_freq,
 		xint dref_sender_index,
