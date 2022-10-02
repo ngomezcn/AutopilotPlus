@@ -36,7 +36,6 @@ void initial_datarefs_request() {
 using namespace sim::flightmodel::position;
 
 
-
 int main()
 {
 	spdlog::set_pattern("[%t] %^[%l]%$ %v");

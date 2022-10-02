@@ -138,7 +138,6 @@
   <ItemGroup>
     <ClCompile Include="autopilotplus.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="UDPService.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="datarefs_map.h" />

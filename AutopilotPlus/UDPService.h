@@ -34,7 +34,6 @@ public:
 	) : socket_(io_service, udp::endpoint(udp::v4(), sport))
 	{
 		spdlog::set_pattern("[%t] %^[%l]%$ %v");
-		spdlog::set_level(spdlog::level::debug);
 
 		spdlog::critical("Created UDPService");
 		spdlog::error("Created UDPService");
@@ -96,7 +95,6 @@ private:
 	void handle_receive(const boost::system::error_code& error, std::size_t size/*bytes_transferred*/)
 	{
 		LOG_DEBUG("run_service(): ")
-			std::cout << "wtf";
 
 		if (!error || error == boost::asio::error::message_size)
 		{
