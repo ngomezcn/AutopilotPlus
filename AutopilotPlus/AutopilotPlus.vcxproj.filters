@@ -29,22 +29,31 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RPOS.h">
-      <Filter>models</Filter>
-    </ClInclude>
-    <ClInclude Include="DREF_REQ.h">
+    <ClInclude Include="DREF_REQUEST.h">
       <Filter>models</Filter>
     </ClInclude>
     <ClInclude Include="xplane_types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sim.h">
+    <ClInclude Include="datarefs_loader.h">
       <Filter>models</Filter>
     </ClInclude>
     <ClInclude Include="UDPService.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DREF_IN.h">
+    <ClInclude Include="DREF_INPUT.h">
+      <Filter>models</Filter>
+    </ClInclude>
+    <ClInclude Include="DREF.h">
+      <Filter>models</Filter>
+    </ClInclude>
+    <ClInclude Include="WRITABLE_DREF.h">
+      <Filter>models</Filter>
+    </ClInclude>
+    <ClInclude Include="DREFs_definition.h">
+      <Filter>models</Filter>
+    </ClInclude>
+    <ClInclude Include="DREF_OUTPUT.h">
       <Filter>models</Filter>
     </ClInclude>
   </ItemGroup>

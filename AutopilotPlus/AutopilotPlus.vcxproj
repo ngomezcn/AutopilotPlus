@@ -140,13 +140,16 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DREF_IN.h" />
-    <ClInclude Include="DREF_REQ.h" />
+    <ClInclude Include="DREF_INPUT.h" />
+    <ClInclude Include="DREF_OUTPUT.h" />
+    <ClInclude Include="DREF_REQUEST.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="RPOS.h" />
-    <ClInclude Include="sim.h" />
+    <ClInclude Include="datarefs_loader.h" />
+    <ClInclude Include="DREF.h" />
     <ClInclude Include="UDPService.h" />
+    <ClInclude Include="WRITABLE_DREF.h" />
     <ClInclude Include="xplane_types.h" />
+    <ClInclude Include="DREFs_definition.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AutopilotPlus.rc" />
