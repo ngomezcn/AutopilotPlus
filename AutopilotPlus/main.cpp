@@ -12,12 +12,15 @@ int main()
 		boost::asio::io_service io_service;
 		UDPService udp_service(
 			io_service,
-			"172.0.0.1", "49000",
-			3443);
+			"192.168.8.103", "49000",
+			15);
 
-		for (auto& x : datarefs_to_load)
+
+		for (simvar* x : DATAREFS_TO_LOAD)
 		{
-			unsigned char* data = reinterpret_cast<unsigned char*>(&x.rref);
+			DATAREFS_MAP.insert(std::make_pair((*x).id, x));
+
+			unsigned char* data = reinterpret_cast<unsigned char*>(&(*x).rref);
 			unsigned char header[] = "RREF";
 			unsigned char msg[sizeof(header) + sizeof(DREF_REQ)];
 
@@ -26,10 +29,12 @@ int main()
 
 			udp_service.send(msg, sizeof(msg));
 		}
-		while(true)
-			io_service.run();
 
-		
+		while (true)
+		{
+			io_service.run();
+			std::cout << sim::flightmodel::position::latitude.get() << std::endl;
+		}
 	}
 	catch (std::exception& e)
 	{

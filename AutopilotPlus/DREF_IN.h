@@ -5,8 +5,8 @@
 
 struct DREF_IN
 {
-	xint dref_sender_index;
-	xflt dref_flt_value;
+	xint sender_index;
+	xflt flt_value;
 } dref_in;
 
 #endif /* DREF_IN_H */

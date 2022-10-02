@@ -16,6 +16,7 @@
 #include "RPOS.h"
 #include "xplane_types.h"
 #include "DREF_IN.h"
+#include "sim.h"
 
 using namespace boost;
 using namespace boost::asio::ip;
@@ -40,10 +41,10 @@ public:
 
 	void send(unsigned char* msg, int size)
 	{
-		std::cout << "We send " << size << " bytes" << std::endl;
-		for (size_t i = 0; i < size; i++)
-			std::cout << std::hex << (int)msg[i] << " ";
-		std::cout << std::endl;
+		std::cout << "Send " << size << " bytes" << std::endl;
+		//for (size_t i = 0; i < size; i++)
+		//	std::cout << std::hex << (int)msg[i] << " ";
+		//std::cout << std::endl;
 		socket_.async_send_to(boost::asio::buffer(msg, size), xplane_endpoint_,
 			boost::bind(&UDPService::handle_send, this,
 				msg,
@@ -77,14 +78,14 @@ private:
 			{
 				unsigned char* dref_in_ = reinterpret_cast<unsigned char*>(&dref_in);
 
-				for (size_t i = 5; i < sizeof(DREF_IN)+5; i++)
+				int header_size = 5;
+				for (size_t i = header_size; i < sizeof(DREF_IN)+header_size; i++)
 				{
-					dref_in_[i-5] = recv_buffer_[i];
-					//std::cout << std::hex << (int)recv_buffer_[i] << " ";
+					dref_in_[i-header_size] = recv_buffer_[i];
 				}
-				//std::cout << std::endl;
-				std::cout << dref_in.dref_sender_index << " - " << dref_in.dref_flt_value << std::endl;
+				std::cout << dref_in.sender_index << " - " << dref_in.flt_value << std::endl;
 
+				(*DATAREFS_MAP[dref_in.sender_index]).value_ = dref_in.flt_value;
 			}
 			start_receive();
 		}
