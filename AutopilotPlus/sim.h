@@ -45,8 +45,8 @@ public:
 namespace sim {
 	namespace flightmodel {
 		namespace position {
-			simvar latitude("sim/flightmodel/position/latitude", 1);
-			simvar longitude("sim/flightmodel/position/longitude", 0);
+			simvar latitude("sim/flightmodel/position/latitude", 0);
+			simvar longitude("sim/flightmodel/position/longitude", 1);
 		}
 	}
 }

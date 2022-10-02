@@ -9,6 +9,7 @@
 #include <boost/array.hpp>
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/thread.hpp>
 #include <boost/asio.hpp>
 #include <iomanip>
 #include <sstream>
@@ -26,7 +27,6 @@ class UDPService
 public:
 
 	UDPService(
-		boost::asio::io_service& io_service,
 		const char* host,
 		const char* cport,
 		int sport
@@ -36,7 +36,21 @@ public:
 		udp::resolver::query query(udp::v4(), host, cport);
 		xplane_endpoint_ = *resolver.resolve(query);
 		
+		boost::thread* th = new boost::thread(boost::bind(&UDPService::run_service, this));
+
 		start_receive();
+	}
+
+	void run_service()
+	{
+		while (1) {
+			try {
+				this->io_service.run();
+			}
+			catch (const std::exception& e) {
+				std::cerr << e.what() << std::endl;
+			}
+		}
 	}
 
 	void send(unsigned char* msg, int size)
@@ -98,6 +112,7 @@ private:
 	{
 	}
 
+	boost::asio::io_service io_service;
 	udp::socket socket_;
 	udp::endpoint remote_endpoint_;
 	udp::endpoint xplane_endpoint_;
