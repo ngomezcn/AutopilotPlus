@@ -5,14 +5,13 @@ const xint strDIM = 500;
 
 struct DREF_OUTPUT
 {
-	xflt var_;
+	xflt var_ = -1;
 	xchr dref_path_[strDIM];
 
 	DREF_OUTPUT(){}
 	DREF_OUTPUT(
-		xflt var,
 		const xchr dref_path[strDIM]
-	) : var_(var)
+	) 
 	{
 		strncpy_s(dref_path_, dref_path, strlen(dref_path));
 

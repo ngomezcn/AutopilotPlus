@@ -8,22 +8,20 @@
 
 struct WRITABLE_DREF : DREF {
 private:
-	float data_to_set = 0;
 	DREF_OUTPUT dref_out;
 	int path_size_ = 0;
 
 public:
-	WRITABLE_DREF(const char* path, int dref_freq_ = DEFAULT_DREF_FREQ, float initial_value = 0) : DREF(path, dref_freq_) {
+	WRITABLE_DREF(const char* path, int dref_freq_ = DEFAULT_DREF_FREQ) : DREF(path, dref_freq_) {
 
 		for (int i = 0; path_[i] != '\0'; i++)
 			path_size_++;
 
-		dref_out = DREF_OUTPUT(data_to_set, path);
+		dref_out = DREF_OUTPUT( path);
 	}
 
 	void set(float value_) {
-		data_to_set = value_;
-		dref_out.var_ = data_to_set;
+		dref_out.var_ = value_;
 
 		unsigned char* data = reinterpret_cast<unsigned char*>(&dref_out);
 		unsigned char header[5] = "DREF";

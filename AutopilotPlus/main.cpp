@@ -42,6 +42,7 @@ using namespace sim::flightmodel::position;
 
 int main()
 {
+
 	spdlog::set_pattern("[%t] %^[%l]%$ %v");
 
 	LOG_DEBUG("Support for int: {0:d};  hex: {0:x};  oct: {0:o}; bin: {0:b}", 42);
@@ -71,8 +72,8 @@ int main()
 		udp_service.init_service();
 
 		while (true){
-			//local_y.set(500);
-			//std::cout << elevation.get() << " - " << latitude.get() << " - " << longitude.get() << '\r';
+			local_y.set(500);
+			std::cout << elevation.get() << " - " << latitude.get() << " - " << longitude.get() << '\r';
 		}
 	}
 	catch (std::exception& e)

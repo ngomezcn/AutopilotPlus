@@ -34,12 +34,12 @@ public:
 	) : socket_(io_service, udp::endpoint(udp::v4(), sport))
 	{
 		spdlog::set_pattern("[%t] %^[%l]%$ %v");
-
-		spdlog::critical("Created UDPService");
-		spdlog::error("Created UDPService");
 		spdlog::info("Created UDPService");
-		spdlog::debug("Created UDPService");
-		spdlog::trace("Created UDPService");
+
+		//spdlog::critical("Created UDPService");
+		//spdlog::error("Created UDPService");
+		//spdlog::debug("Created UDPService");
+		//spdlog::trace("Created UDPService");
 
 		udp::resolver resolver(io_service);
 		udp::resolver::query query(udp::v4(), host, cport);
@@ -147,6 +147,6 @@ private:
 	udp::endpoint xplane_endpoint_;
 	unsigned char recv_buffer_[1500 + NULL_TERMINATE_SAFELY];
 
-} udp_service("192.168.8.103", "49000", 17);
+} udp_service("192.168.8.101", "49000", 17);
 
 #endif /* UDPSERVER_H */
