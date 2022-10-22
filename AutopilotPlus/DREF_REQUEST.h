@@ -5,7 +5,7 @@
 
 #include "xplane_types.h"
 
-extern struct DREF_REQUEST
+struct DREF_REQUEST
 {
 	xint dref_freq_; // number of times per second you want x-plane to send this data
 	xint dref_sender_index_;	// the index the customer is using to define this dataref

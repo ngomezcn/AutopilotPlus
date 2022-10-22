@@ -20,71 +20,36 @@ class Core {
 			&longitude
 	};
 	std::map<int, DREF*> drefs_map;
+	XPlaneConnect* xplane_connect;
 
 public:
 
-	void handle_receive(const boost::system::error_code& error, std::size_t bytes_transferred)
+	~Core()
 	{
-
+		delete(xplane_connect);
 	}
-
-	Core() {
-		this->setup_logger();
-
-		auto system_ip = "192.168.8.101";
-		auto xplane_port = "49000";
-		auto local_port = "192.168.8.101";
-
-		XPlaneConnect a(system_ip, xplane_port, local_port);
-
-		//xplane_service = new UDPService(system_ip, xplane_port, local_port);
-		//this->datarefs_request();
-	}
-
 	void init()
 	{
-	/*	try
+		auto system_ip = "192.168.8.101";
+		auto xplane_port = "49000";
+		auto local_port = "17";
+
+		try
 		{
-			this->xplane_service->init_service();
+			this->setup_logger();
+			xplane_connect = new XPlaneConnect(system_ip, xplane_port, local_port);
+			xplane_connect->init();
 
 			while (true) {
 				local_y.set(500);
-				std::cout << elevation.get() << " - " << latitude.get() << " - " << longitude.get() << "\r";
+				std::cout << elevation.get() << " - " << latitude.get() << " - " << longitude.get() << '\r';
 			}
 		}
 		catch (std::exception& e)
 		{
-			std::cerr << e.what() << std::endl;
-		}*/
+			LOG_ERROR(e.what());
+		}
 	}
-
-	//void datarefs_request()
-	//{
-	//	for (DREF* dataref : drefs_request_list)
-	//	{
-	//		if (dataref->dref_req.dref_freq_ > 0)
-	//			LOG_INFO("DATAREF requested: Path:[{0}], Freq:{1}, Index:{2}", dataref->dref_req.dref_string_, dataref->dref_req.dref_freq_, dataref->dref_req.dref_sender_index_);
-	//		else
-	//			LOG_WARNING("DATAREF requested: Path:[{0}], Freq:{1}, Index:{2} (warn: FREQ = 0)", dataref->dref_req.dref_string_, dataref->dref_req.dref_freq_, dataref->dref_req.dref_sender_index_);
-
-	//		drefs_map.insert(std::make_pair((*dataref).id, dataref));
-
-	//		unsigned char* data = reinterpret_cast<unsigned char*>(&(*dataref).dref_req);
-	//		unsigned char header[] = "RREF";
-	//		unsigned char msg[sizeof(header) + sizeof(DREF_REQUEST)];
-
-	//		memcpy(msg, header, sizeof(header));
-	//		memcpy(msg + sizeof(header), data, sizeof(DREF_REQUEST));
-
-	//		this->xplane_service->send(msg, sizeof(msg));
-	//	}
-	//	LOG_INFO("Total DATAREFs requested: {0}", drefs_request_list.size());
-	//}
-
-	//~Core() {
-	//	LOG_DEBUG("Core: destructor");
-	//	delete(xplane_service);
-	//}
 
 	void setup_logger() const
 	{
@@ -97,15 +62,10 @@ public:
 };
 
 int DREF::serial_id = 0;
-
 int main()
 {
-
 	Core o_core;
 	o_core.init();
 
-	while(true)
-	{
-		
-	}
+	//TODO : Al clicar para cerrar la ventana asegurarse de enviar FREQ = 0 a todas las variables para asi evitar errores https://stackoverflow.com/questions/21404256/call-function-right-before-termination-c
 }
