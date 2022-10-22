@@ -1,22 +1,24 @@
+// ReSharper disable CppClangTidyModernizeAvoidBind
 #ifndef UDPSERVER_H
 #define UDPSERVER_H
 
 #define NULL_TERMINATE_SAFELY 1
 
-#include <ctime>
 #include <iostream>
-#include <string>
 #include <boost/array.hpp>
-#include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 #include <boost/asio.hpp>
-#include <iomanip>
-#include <sstream>
-#include "xplane_types.h"
 
+#include "DREF.h"
 #include "DREF_INPUT.h"
-#include "datarefs_map.h"
+#include "logger.h"
+
+#define MACRO(X,Y)                         \
+{                                          \
+  cout << "1st arg is:" << (X) << endl;    \
+  cout << "2nd arg is:" << (Y) << endl;    \
+  cout << "Sum is:" << ((X)+(Y)) << endl;  \
+}
 
 using namespace boost;
 using namespace boost::asio::ip;
@@ -26,29 +28,36 @@ using namespace boost::asio::ip;
 class UDPService
 {
 public:
-	
-	UDPService(
-		const char* host,
-		const char* cport,
-		int sport
-	) : socket_(io_service, udp::endpoint(udp::v4(), sport))
-	{
-		spdlog::set_pattern("[%t] %^[%l]%$ %v");
-		spdlog::info("Created UDPService");
 
-		//spdlog::critical("Created UDPService");
-		//spdlog::error("Created UDPService");
-		//spdlog::debug("Created UDPService");
-		//spdlog::trace("Created UDPService");
+	std::map<int, DREF*> &drefs_map;
+
+	UDPService(
+		const char* xplane_host,
+		const char* xplane_port,
+		const char* local_port,
+		std::map<int, DREF*> &_datarefs_map
+	) : socket_(io_service, udp::endpoint(udp::v4(),  atoi(local_port))), drefs_map(_datarefs_map)
+	{
+		LOG_INFO("Starting UDPService => System IP: {0}, X-Plane Port {1}, AutopilotPlus Port: {2}", xplane_host, xplane_port, local_port);
 
 		udp::resolver resolver(io_service);
-		udp::resolver::query query(udp::v4(), host, cport);
+		const udp::resolver::query query(udp::v4(), xplane_host, xplane_port);
 		xplane_endpoint_ = *resolver.resolve(query);
-		start_receive();
+	}
+
+	~UDPService() {
+		LOG_DEBUG("UDPService: destructor");
 	}
 
 	void send(unsigned char* msg, int size)
 	{
+	/*	for (int i = 0; i < size; i++)
+		{
+			std::cout << (int)msg[i];
+		}
+		std::cout << std::endl;
+		LOG_DEBUG("UDPServer: send(): msg (HEX): {0}, size: {1}", spdlog::to_hex(LOG_CHAR_ARRAY(msg, size)), size);*/
+
 		socket_.send_to(boost::asio::buffer(msg, size), xplane_endpoint_);
 	}
 
@@ -63,27 +72,26 @@ public:
 	}
 	
 	void init_service() {
+		start_async_receiver();
 
-		LOG_DEBUG("init_service(): ")
-
-		boost::thread th(&UDPService::run_service, this);
+		boost::thread th(&UDPService::async_run_service, this);
 		th.detach();
 		Sleep(100);
 	}
 
 private:
-	void run_service()
+	void async_run_service()
 	{
-		LOG_DEBUG("run_service(): ")
-
+		LOG_DEBUG("Starting async UDP receiver");
 		try {
 			this->io_service.run();
 		}
 		catch (const std::exception& e) {
 			std::cerr << e.what() << std::endl;
+			LOG_ERROR("Exception at async_run_service(): {0}", e.what());
 		}
 	}
-	void start_receive()
+	void start_async_receiver()
 	{		
 		socket_.async_receive_from(
 			boost::asio::buffer(recv_buffer_),
@@ -91,11 +99,10 @@ private:
 			boost::bind(&UDPService::handle_receive, this,
 				asio::placeholders::error,
 				asio::placeholders::bytes_transferred));
-	}
-	void handle_receive(const boost::system::error_code& error, std::size_t size/*bytes_transferred*/)
-	{
-		LOG_DEBUG("run_service(): ")
 
+	}
+	void handle_receive(const boost::system::error_code& error, std::size_t bytes_transferred)
+	{
 		if (!error || error == boost::asio::error::message_size)
 		{
 			char header[6] = "";
@@ -106,19 +113,19 @@ private:
 			const char a[] = "RREF,";
 			if (strcmp(a, header) == 0)
 			{
-				int header_size = 5;
+				constexpr int header_size = 5;
 				int dref_in_filled_bytes = 1;
 				int cuadrar = 0;
-				unsigned char* data = reinterpret_cast<unsigned char*>(&dref_in);
+				const auto data = reinterpret_cast<unsigned char*>(&dref_in);
 
-				for (size_t i = header_size; i < size; i++)
+				for (size_t i = header_size; i < bytes_transferred; i++)
 				{
 					data[i-header_size-cuadrar] = recv_buffer_[i];
 
 					if (dref_in_filled_bytes == 8) {
 						try
 						{
-							(*DATAREFS_MAP[dref_in.sender_index]).value_ = dref_in.flt_value;
+							(drefs_map[dref_in.sender_index])->value_ = dref_in.flt_value;
 						}
 						catch (const std::exception&)
 						{
@@ -131,8 +138,9 @@ private:
 					dref_in_filled_bytes++;
 				}
 			}
-			start_receive();
-		} else { LOG_ERROR("handle_receive(): {}", error.message()) }
+			start_async_receiver();
+		}
+		else { LOG_ERROR("handle_receive(): {}", error.message()); }
 	}
 
 	void handle_send(unsigned char* message/*message*/, int size,
@@ -147,6 +155,6 @@ private:
 	udp::endpoint xplane_endpoint_;
 	unsigned char recv_buffer_[1500 + NULL_TERMINATE_SAFELY];
 
-} udp_service("192.168.8.101", "49000", 17);
+};
 
 #endif /* UDPSERVER_H */

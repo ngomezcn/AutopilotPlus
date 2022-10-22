@@ -31,7 +31,7 @@ public:
 		memcpy(msg, header, sizeof(header));
 		memcpy(msg + sizeof(header), data, sizeof(DREF_OUTPUT));
 
-		udp_service.async_send(msg, sizeof(msg));
+		//udp_service.async_send(msg, sizeof(msg));
 	}
 };
 

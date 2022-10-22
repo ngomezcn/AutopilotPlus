@@ -1,84 +1,110 @@
 #include <iostream>
 
-
-#include "autopilotplus.cpp"
-#include "spdlog/spdlog.h"
-
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
-
-#define LOG_TRACE(...) spdlog::trace(__VA_ARGS__);
-#define LOG_DEBUG(...) spdlog::debug(__VA_ARGS__);
-#define LOG_INFO(...)  spdlog::info(__VA_ARGS__);
-#define LOG_ERROR(...) spdlog::error(__VA_ARGS__);
-
+#include "logger.h"
 #include "UDPService.h"
-
 #include "DREF_REQUEST.h"
-#include "datarefs_loader.h"
+#include "DREFs_definition.h"
 
 using namespace boost;
+using namespace xplane::sim::flightmodel::position;
 
-void initial_datarefs_request() {
-	for (DREF* dataref : DREFs_TO_REQUEST)
-	{
-		DATAREFS_MAP.insert(std::make_pair((*dataref).id, dataref));
+class xplane_connector
+{
+	UDPService* xplane_service;
+	std::vector<DREF*> drefs_request_list{
+			&local_y,
+			&local_z,
+			&lat_ref,
+			&lon_ref,
+			&elevation,
+			&latitude,
+			&longitude
+	};
+	DREF_INPUT dref_in;
+};
 
-		unsigned char* data = reinterpret_cast<unsigned char*>(&(*dataref).dref_req);
-		unsigned char header[] = "RREF";
-		unsigned char msg[sizeof(header) + sizeof(DREF_REQUEST)];
+class Core {
 
-		memcpy(msg, header, sizeof(header));
-		memcpy(msg + sizeof(header), data, sizeof(DREF_REQUEST));
+	UDPService* xplane_service;
+	std::vector<DREF*> drefs_request_list{
+			&local_y,
+			&local_z,
+			&lat_ref,
+			&lon_ref,
+			&elevation,
+			&latitude,
+			&longitude
+	};
+	std::map<int, DREF*> drefs_map;
 
-		udp_service.send(msg, sizeof(msg));
+public:
+	Core() {
+		this->setup_logger();
+
+		const auto system_ip = "192.168.8.101";
+		const auto xplane_port = "49000";
+		const auto local_port = "192.168.8.101";
+		xplane_service = new UDPService(system_ip, xplane_port, local_port, drefs_map);
+		this->datarefs_request();
 	}
-}
-using namespace sim::flightmodel::position;
 
-// TODO: Global class
-// Crear clasee Application (nombre no definitivo) que contendra todas las actuales variables globales como miembros.
-// Sera el punto de entrada de la aplicacion.
- 
+	void init()
+	{
+		try
+		{
+			this->xplane_service->init_service();
+
+			while (true) {
+				local_y.set(500);
+				std::cout << elevation.get() << " - " << latitude.get() << " - " << longitude.get() << "\r";
+			}
+		}
+		catch (std::exception& e)
+		{
+			std::cerr << e.what() << std::endl;
+		}
+	}
+
+	void datarefs_request()
+	{
+		for (DREF* dataref : drefs_request_list)
+		{
+			if (dataref->dref_req.dref_freq_ > 0)
+				LOG_INFO("DATAREF requested: Path:[{0}], Freq:{1}, Index:{2}", dataref->dref_req.dref_string_, dataref->dref_req.dref_freq_, dataref->dref_req.dref_sender_index_);
+			else
+				LOG_WARNING("DATAREF requested: Path:[{0}], Freq:{1}, Index:{2} (warn: FREQ = 0)", dataref->dref_req.dref_string_, dataref->dref_req.dref_freq_, dataref->dref_req.dref_sender_index_);
+
+			drefs_map.insert(std::make_pair((*dataref).id, dataref));
+
+			unsigned char* data = reinterpret_cast<unsigned char*>(&(*dataref).dref_req);
+			unsigned char header[] = "RREF";
+			unsigned char msg[sizeof(header) + sizeof(DREF_REQUEST)];
+
+			memcpy(msg, header, sizeof(header));
+			memcpy(msg + sizeof(header), data, sizeof(DREF_REQUEST));
+
+			this->xplane_service->send(msg, sizeof(msg));
+		}
+		LOG_INFO("Total DATAREFs requested: {0}", drefs_request_list.size());
+	}
+
+	~Core() {
+		LOG_DEBUG("Core: destructor");
+		delete(xplane_service);
+	}
+
+	void setup_logger() const
+	{
+		const char* log_pattern = "[%t] %^[%l]%$ %v";
+		spdlog::set_pattern(log_pattern);
+		spdlog::set_level(LOG_LEVEL);
+
+		LOG_INFO("Setting logger => Level:{0}, Pattern: '{1}'", LOG_LEVEL, log_pattern);
+	}
+};
 
 int main()
 {
-
-	spdlog::set_pattern("[%t] %^[%l]%$ %v");
-
-	LOG_DEBUG("Support for int: {0:d};  hex: {0:x};  oct: {0:o}; bin: {0:b}", 42);
-	//// [2022-10-02 23:51:48.948] [info] Welcome to spdlog!
-
-	//spdlog::info("Welcome to spdlog!");
-	//spdlog::error("Some error message with arg: {}", 1);
-
-	//spdlog::warn("Easy padding in numbers like {:08d}", 12);
-	//spdlog::critical("Support for int: {0:d};  hex: {0:x};  oct: {0:o}; bin: {0:b}", 42);
-	//spdlog::info("Support for floats {:03.2f}", 1.23456);
-	//spdlog::info("Positional args are {1} {0}..", "too", "supported");
-	//spdlog::trace("{:<30}", "left aligned");
-
-
-	//// change log pattern
-	//spdlog::set_pattern("[%H:%M:%S %z] [%n] [%^---%L---%$] [thread %t] %v");
-
-	//// Compile time log levels
-	//// define SPDLOG_ACTIVE_LEVEL to desired level
-	//SPDLOG_TRACE("Some trace message with param {}", 42);
-	SPDLOG_DEBUG("Some debug message");
-
-	try
-	{
-		initial_datarefs_request();
-		udp_service.init_service();
-
-		while (true){
-			local_y.set(500);
-			std::cout << elevation.get() << " - " << latitude.get() << " - " << longitude.get() << '\r';
-		}
-	}
-	catch (std::exception& e)
-	{
-		std::cerr << e.what() << std::endl;
-	}
-    return 0;
+	Core o_core;
+	o_core.init();
 }

@@ -136,16 +136,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="autopilotplus.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="datarefs_map.h" />
     <ClInclude Include="DREF_INPUT.h" />
     <ClInclude Include="DREF_OUTPUT.h" />
     <ClInclude Include="DREF_REQUEST.h" />
+    <ClInclude Include="logger.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="datarefs_loader.h" />
     <ClInclude Include="DREF.h" />
     <ClInclude Include="UDPService.h" />
     <ClInclude Include="WRITABLE_DREF.h" />

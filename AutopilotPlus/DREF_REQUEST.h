@@ -1,6 +1,8 @@
 #ifndef DREF_REQ_H
 #define DREF_REQ_H
 
+#include <cstring>
+
 #include "xplane_types.h"
 
 extern struct DREF_REQUEST

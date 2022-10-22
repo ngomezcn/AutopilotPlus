@@ -16,11 +16,11 @@
     <Filter Include="models">
       <UniqueIdentifier>{777fcfd7-4a9b-4da6-8d2e-a3efec659b4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="models\xplane">
+      <UniqueIdentifier>{36464045-fea7-447a-814b-92df754d3186}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="autopilotplus.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -29,20 +29,8 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DREF_REQUEST.h">
-      <Filter>models</Filter>
-    </ClInclude>
-    <ClInclude Include="xplane_types.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="datarefs_loader.h">
-      <Filter>models</Filter>
-    </ClInclude>
     <ClInclude Include="UDPService.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DREF_INPUT.h">
-      <Filter>models</Filter>
     </ClInclude>
     <ClInclude Include="DREF.h">
       <Filter>models</Filter>
@@ -53,11 +41,20 @@
     <ClInclude Include="DREFs_definition.h">
       <Filter>models</Filter>
     </ClInclude>
-    <ClInclude Include="DREF_OUTPUT.h">
-      <Filter>models</Filter>
+    <ClInclude Include="logger.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="datarefs_map.h">
-      <Filter>models</Filter>
+    <ClInclude Include="DREF_OUTPUT.h">
+      <Filter>models\xplane</Filter>
+    </ClInclude>
+    <ClInclude Include="DREF_INPUT.h">
+      <Filter>models\xplane</Filter>
+    </ClInclude>
+    <ClInclude Include="DREF_REQUEST.h">
+      <Filter>models\xplane</Filter>
+    </ClInclude>
+    <ClInclude Include="xplane_types.h">
+      <Filter>models\xplane</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
