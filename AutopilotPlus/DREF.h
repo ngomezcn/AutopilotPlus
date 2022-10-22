@@ -25,6 +25,5 @@ public:
 		return value_;
 	}
 };
-int DREF::serial_id = 0;
 
 #endif /* SIMVAR_H */

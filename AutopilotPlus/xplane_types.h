@@ -9,5 +9,4 @@ typedef char xchr;
 typedef float xflt;
 typedef double xdob;
 
-
 #endif /* XPLANE_TYPES_H */

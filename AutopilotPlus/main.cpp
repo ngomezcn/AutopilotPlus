@@ -1,31 +1,15 @@
 #include <iostream>
+#include <map>
+#include <boost/system/error_code.hpp>
 
-#include "logger.h"
-#include "UDPService.h"
-#include "DREF_REQUEST.h"
-#include "DREFs_definition.h"
+#include "XPlaneConnect.h"
 
 using namespace boost;
 using namespace xplane::sim::flightmodel::position;
 
-class xplane_connector
-{
-	UDPService* xplane_service;
-	std::vector<DREF*> drefs_request_list{
-			&local_y,
-			&local_z,
-			&lat_ref,
-			&lon_ref,
-			&elevation,
-			&latitude,
-			&longitude
-	};
-	DREF_INPUT dref_in;
-};
-
 class Core {
 
-	UDPService* xplane_service;
+	//UDPService* xplane_service;
 	std::vector<DREF*> drefs_request_list{
 			&local_y,
 			&local_z,
@@ -38,19 +22,28 @@ class Core {
 	std::map<int, DREF*> drefs_map;
 
 public:
+
+	void handle_receive(const boost::system::error_code& error, std::size_t bytes_transferred)
+	{
+
+	}
+
 	Core() {
 		this->setup_logger();
 
-		const auto system_ip = "192.168.8.101";
-		const auto xplane_port = "49000";
-		const auto local_port = "192.168.8.101";
-		xplane_service = new UDPService(system_ip, xplane_port, local_port, drefs_map);
-		this->datarefs_request();
+		auto system_ip = "192.168.8.101";
+		auto xplane_port = "49000";
+		auto local_port = "192.168.8.101";
+
+		XPlaneConnect a(system_ip, xplane_port, local_port);
+
+		//xplane_service = new UDPService(system_ip, xplane_port, local_port);
+		//this->datarefs_request();
 	}
 
 	void init()
 	{
-		try
+	/*	try
 		{
 			this->xplane_service->init_service();
 
@@ -62,36 +55,36 @@ public:
 		catch (std::exception& e)
 		{
 			std::cerr << e.what() << std::endl;
-		}
+		}*/
 	}
 
-	void datarefs_request()
-	{
-		for (DREF* dataref : drefs_request_list)
-		{
-			if (dataref->dref_req.dref_freq_ > 0)
-				LOG_INFO("DATAREF requested: Path:[{0}], Freq:{1}, Index:{2}", dataref->dref_req.dref_string_, dataref->dref_req.dref_freq_, dataref->dref_req.dref_sender_index_);
-			else
-				LOG_WARNING("DATAREF requested: Path:[{0}], Freq:{1}, Index:{2} (warn: FREQ = 0)", dataref->dref_req.dref_string_, dataref->dref_req.dref_freq_, dataref->dref_req.dref_sender_index_);
+	//void datarefs_request()
+	//{
+	//	for (DREF* dataref : drefs_request_list)
+	//	{
+	//		if (dataref->dref_req.dref_freq_ > 0)
+	//			LOG_INFO("DATAREF requested: Path:[{0}], Freq:{1}, Index:{2}", dataref->dref_req.dref_string_, dataref->dref_req.dref_freq_, dataref->dref_req.dref_sender_index_);
+	//		else
+	//			LOG_WARNING("DATAREF requested: Path:[{0}], Freq:{1}, Index:{2} (warn: FREQ = 0)", dataref->dref_req.dref_string_, dataref->dref_req.dref_freq_, dataref->dref_req.dref_sender_index_);
 
-			drefs_map.insert(std::make_pair((*dataref).id, dataref));
+	//		drefs_map.insert(std::make_pair((*dataref).id, dataref));
 
-			unsigned char* data = reinterpret_cast<unsigned char*>(&(*dataref).dref_req);
-			unsigned char header[] = "RREF";
-			unsigned char msg[sizeof(header) + sizeof(DREF_REQUEST)];
+	//		unsigned char* data = reinterpret_cast<unsigned char*>(&(*dataref).dref_req);
+	//		unsigned char header[] = "RREF";
+	//		unsigned char msg[sizeof(header) + sizeof(DREF_REQUEST)];
 
-			memcpy(msg, header, sizeof(header));
-			memcpy(msg + sizeof(header), data, sizeof(DREF_REQUEST));
+	//		memcpy(msg, header, sizeof(header));
+	//		memcpy(msg + sizeof(header), data, sizeof(DREF_REQUEST));
 
-			this->xplane_service->send(msg, sizeof(msg));
-		}
-		LOG_INFO("Total DATAREFs requested: {0}", drefs_request_list.size());
-	}
+	//		this->xplane_service->send(msg, sizeof(msg));
+	//	}
+	//	LOG_INFO("Total DATAREFs requested: {0}", drefs_request_list.size());
+	//}
 
-	~Core() {
-		LOG_DEBUG("Core: destructor");
-		delete(xplane_service);
-	}
+	//~Core() {
+	//	LOG_DEBUG("Core: destructor");
+	//	delete(xplane_service);
+	//}
 
 	void setup_logger() const
 	{
@@ -103,8 +96,16 @@ public:
 	}
 };
 
+int DREF::serial_id = 0;
+
 int main()
 {
+
 	Core o_core;
 	o_core.init();
+
+	while(true)
+	{
+		
+	}
 }

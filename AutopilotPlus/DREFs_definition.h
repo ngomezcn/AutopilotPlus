@@ -1,12 +1,11 @@
 #ifndef DREFS_DEFINITION_H
 #define DREFS_DEFINITION_H
 
-#include "DREF.h"
 #include "WRITABLE_DREF.h"
+#include "DREF_INPUT.h"
 
 namespace xplane
 {
-
 	enum DREF_PERIOD
 	{
 		PERIOD_NEVER = 0,

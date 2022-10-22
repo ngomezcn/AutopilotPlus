@@ -7,5 +7,5 @@ struct DREF_INPUT
 {
 	xint sender_index;
 	xflt flt_value;
-} dref_in;
+};
 #endif /* DREF_IN_H */

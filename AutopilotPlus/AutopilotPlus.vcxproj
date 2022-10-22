@@ -137,6 +137,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="XPlaneConnect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DREF_INPUT.h" />
@@ -149,9 +150,6 @@
     <ClInclude Include="WRITABLE_DREF.h" />
     <ClInclude Include="xplane_types.h" />
     <ClInclude Include="DREFs_definition.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="AutopilotPlus.rc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
