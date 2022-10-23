@@ -49,10 +49,10 @@ public:
 	boost::thread th_async_run_service;
 	std::atomic_bool terminate_async_receiver = false;
 
-	void init_udp_service() {
-		start_async_receiver();
+	void start_udp_receiver() {
+		set_callback_for_async_receive();
 
-		th_async_run_service = boost::thread(&UDPService::async_run_service, this);
+		th_async_run_service = boost::thread(&UDPService::start_io_udp_service, this);
 		th_async_run_service.detach();
 		Sleep(50);
 	}
@@ -65,7 +65,7 @@ public:
 	}
 
 private:
-	void async_run_service()
+	void start_io_udp_service()
 	{
 		if(!terminate_async_receiver)
 		{
@@ -74,7 +74,7 @@ private:
 				this->io_service.run();
 			}
 			catch (const std::exception& e) {
-				Log::error("Exception at async_run_service(): {0}", e.what());
+				Log::error("Exception at start_io_udp_service(): {0}", e.what());
 				Log::info("Stopping async UDP receiver");  return;
 			}
 		} else
@@ -83,7 +83,7 @@ private:
 		}
 	}
 public:
-	void start_async_receiver()
+	void set_callback_for_async_receive()
 	{
 		socket_.async_receive_from(
 			boost::asio::buffer(received_buffer),
