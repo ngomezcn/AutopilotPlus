@@ -28,8 +28,8 @@ public:
 	void init()
 	{
 		unrequest_DREFs_list(); // Nos aseguramos de que xplane no este enviando datos antes de empezar a recibir los datos
-		this->start_udp_receiver();
 		request_DREFs_list();
+		this->start_udp_receiver();
 	}
 
 	void unrequest_DREFs_list();
@@ -129,7 +129,7 @@ inline void XPlaneConnect::handle_receive(const boost::system::error_code& error
 			header[i] = received_buffer[i];
 
 		dispatch_received_data(header, size_recv_data);
-		//set_callback_for_async_receive(); // ESTO CREO QUE NO ES NECESARIO PERO SI HAY PROBLEMAS PRUEBA A DESCOMENTAR
+		async_receive(); 
 	}
 	else
 	{
