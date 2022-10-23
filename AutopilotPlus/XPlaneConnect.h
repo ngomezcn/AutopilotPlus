@@ -36,6 +36,9 @@ public:
 
 	void request_DREFs_list();
 
+	/**
+	 * @bug: Devuelve el puntero de una variable local, hay que hacer que pase el return por referencia en los parametros
+	 */
 	static unsigned char* build_rref_msg(DREF* dref);
 
 	/**
