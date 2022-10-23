@@ -1,8 +1,11 @@
 #include <iostream>
 #include <map>
-#include <boost/system/error_code.hpp>
+#include <stdio.h>
 
+#include <boost/system/error_code.hpp>
 #include "XPlaneConnect.h"
+
+#include <windows.h> // Always put windows.h after asio.hpp to avoid compatibility-issues
 
 using namespace boost;
 using namespace xplane::sim::flightmodel::position;
@@ -24,10 +27,6 @@ class Core {
 
 public:
 
-	~Core()
-	{
-		delete(xplane_connect);
-	}
 	void init()
 	{
 		auto system_ip = "192.168.8.101";
@@ -36,7 +35,8 @@ public:
 
 		try
 		{
-			this->setup_logger();
+			Log::setSettings();
+
 			xplane_connect = new XPlaneConnect(system_ip, xplane_port, local_port);
 			xplane_connect->init();
 
@@ -47,25 +47,25 @@ public:
 		}
 		catch (std::exception& e)
 		{
-			LOG_ERROR(e.what());
+			Log::error(e.what());
 		}
 	}
 
-	void setup_logger() const
+	~Core()
 	{
-		const char* log_pattern = "[%t] %^[%l]%$ %v";
-		spdlog::set_pattern(log_pattern);
-		spdlog::set_level(LOG_LEVEL);
-
-		LOG_INFO("Setting logger => Level:{0}, Pattern: '{1}'", LOG_LEVEL, log_pattern);
+		delete(xplane_connect);
 	}
 };
+
+
 
 int DREF::serial_id = 0;
 int main()
 {
+	/*HWND hwnd = GetConsoleWindow();
+	HMENU hmenu = GetSystemMenu(hwnd, FALSE);
+	EnableMenuItem(hmenu, SC_CLOSE, MF_GRAYED);*/
+
 	Core o_core;
 	o_core.init();
-
-	//TODO : Al clicar para cerrar la ventana asegurarse de enviar FREQ = 0 a todas las variables para asi evitar errores https://stackoverflow.com/questions/21404256/call-function-right-before-termination-c
 }

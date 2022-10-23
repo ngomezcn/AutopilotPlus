@@ -25,41 +25,71 @@ public:
 	XPlaneConnect(const char* system_ip, const char* xplane_port, const char* local_port) : UDPService(system_ip, xplane_port, local_port)
 	{
 	}
-
 	void init()
 	{
+		unrequest_datarefs();
 		request_datarefs();
 		this->init_udp_service();
+	}
+
+	unsigned char* build_rref_msg(DREF* dref)
+	{
+		const unsigned char HEADER[] = "RREF"; // TODO: Se podria crear algun enum, struct.... para gestionar los headers en el namespace xplane 
+
+		unsigned char* data = reinterpret_cast<unsigned char*>(&(*dref).dref_request);
+		unsigned char msg[sizeof(HEADER) + sizeof(DREF_REQUEST)];
+
+		memcpy(msg, HEADER, sizeof(HEADER));
+		memcpy(msg + sizeof(HEADER), data, sizeof(DREF_REQUEST));
+
+		return msg;
+	}
+
+	void unrequest_datarefs()
+	{
+		for (DREF* dataref : drefs_request_list)
+		{
+			int tmp_dref_freq_ = dataref->dref_request.dref_freq_;
+			dataref->dref_request.dref_freq_ = xplane::DREF_PERIOD::PERIOD_NONE;
+
+			Log::debug("DREF unrequested: Path:[{0}], Freq:{1}, Index:{2}", dataref->dref_request.dref_string_, dataref->dref_request.dref_freq_, dataref->dref_request.dref_sender_index_);
+
+			/*unsigned char* data = reinterpret_cast<unsigned char*>(&(*dataref).dref_request);
+			unsigned char header[] = "RREF";
+			unsigned char msg[sizeof(header) + sizeof(DREF_REQUEST)];
+
+			memcpy(msg, header, sizeof(header));
+			memcpy(msg + sizeof(header), data, sizeof(DREF_REQUEST));*/
+
+			auto msg = build_rref_msg(dataref);
+
+			dataref->dref_request.dref_freq_ = tmp_dref_freq_;
+			this->send(msg, sizeof(msg));
+		}
 	}
 
 	void request_datarefs()
 	{
 		for (DREF* dataref : drefs_request_list)
 		{
-			if (dataref->dref_req.dref_freq_ > xplane::DREF_PERIOD::PERIOD_NONE)
-				LOG_DEBUG("DREF requested: Path:[{0}], Freq:{1}, Index:{2}", dataref->dref_req.dref_string_, dataref->dref_req.dref_freq_, dataref->dref_req.dref_sender_index_);
+			if (dataref->dref_request.dref_freq_ > xplane::DREF_PERIOD::PERIOD_NONE)
+				Log::debug("DREF requested: Path:[{0}], Freq:{1}, Index:{2}", dataref->dref_request.dref_string_, dataref->dref_request.dref_freq_, dataref->dref_request.dref_sender_index_);
 			else
-				LOG_WARNING("DREF requested: Path:[{0}], Freq:{1}, Index:{2} (warn: FREQ = 0)", dataref->dref_req.dref_string_, dataref->dref_req.dref_freq_, dataref->dref_req.dref_sender_index_);
+				Log::warning("DREF requested: Path:[{0}], Freq:{1}, Index:{2} (warn: FREQ = 0)", dataref->dref_request.dref_string_, dataref->dref_request.dref_freq_, dataref->dref_request.dref_sender_index_);
 
-			drefs_map.insert(std::make_pair((*dataref).id, dataref));
+			drefs_map.insert(std::make_pair((*dataref).dref_request.dref_sender_index_, dataref));
 
-			unsigned char* data = reinterpret_cast<unsigned char*>(&(*dataref).dref_req);
-			unsigned char header[] = "RREF";
-			unsigned char msg[sizeof(header) + sizeof(DREF_REQUEST)];
-
-			memcpy(msg, header, sizeof(header));
-			memcpy(msg + sizeof(header), data, sizeof(DREF_REQUEST));
+			auto msg = build_rref_msg(dataref);
 
 			this->send(msg, sizeof(msg));
 		}
-		LOG_INFO("Total DREFs requested: {0}", drefs_request_list.size());
+		Log::info("Total DREFs requested: {0}", drefs_request_list.size());
 	}
 
 	void dispatch_received_data(char header[6], std::size_t size_in_bytes)
 	{
 		if (strcmp("RREF,", header) == 0)
 		{
-			
 				constexpr int header_size = 5;
 				int dref_in_filled_bytes = 1;
 				int cuadrar = 0;
@@ -72,11 +102,12 @@ public:
 					if (dref_in_filled_bytes == 8) {
 						try
 						{
+							//TODO: Poner mas validaciones para evitar Invalid Memory Access Violation, ya que no se puede gestionar por excepciones
 							(*drefs_map[dref_in.sender_index]).value_ = dref_in.flt_value;
 						}
 						catch (std::exception& e)
 						{
-							LOG_ERROR("Ha ocurrido un error al procesar los datos recibidos. INFO: {0}", header);
+							Log::error("Ha ocurrido un error al procesar los datos recibidos. INFO: {0}, {1}", e.what(), header);
 						}
 						dref_in_filled_bytes = 0;
 						cuadrar += 8;
@@ -97,11 +128,19 @@ public:
 			char header[6] = "";
 			for (size_t i = 0; i < 5; i++)
 				header[i] = received_buffer[i];
+
 			dispatch_received_data(header, size_in_bytes);
-			
 			start_async_receiver();
 		}
-		else { LOG_ERROR("handle_receive(): {}", error.message()); }
+		else
+		{
+			throw std::runtime_error(std::string("handle_receive(): ") + error.message());
+		}
+	}
+
+	~XPlaneConnect()
+	{
+		unrequest_datarefs();
 	}
 };
 

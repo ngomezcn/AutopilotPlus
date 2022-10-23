@@ -24,7 +24,7 @@ public:
 		const char* local_port
 	) : socket_(io_service, udp::endpoint(udp::v4(), atoi(local_port)))
 	{
-		LOG_INFO("Starting UDPService => Target IP: {0}, Target Port {1}, Local Port: {2}", target_ip, target_port, local_port);
+		Log::info("Starting UDPService => Target IP: {0}, Target Port {1}, Local Port: {2}", target_ip, target_port, local_port);
 
 		udp::resolver resolver(io_service);
 		const udp::resolver::query query(udp::v4(), target_ip, target_port);
@@ -47,8 +47,7 @@ public:
 	}
 
 	boost::thread th_async_run_service;
-
-	bool terminate_async_receiver = false;
+	std::atomic_bool terminate_async_receiver = false;
 
 	void init_udp_service() {
 		start_async_receiver();
@@ -61,7 +60,8 @@ public:
 	~UDPService()
 	{
 		terminate_async_receiver = true;
-		LOG_DEBUG("UDPService: destructor");
+		th_async_run_service.join();
+		Log::debug("UDPService: destructor");
 	}
 
 private:
@@ -69,17 +69,17 @@ private:
 	{
 		if(!terminate_async_receiver)
 		{
-			LOG_DEBUG("Starting async UDP receiver");
+			Log::info("Starting async UDP receiver");
 			try {
 				this->io_service.run();
 			}
 			catch (const std::exception& e) {
-				std::cerr << e.what() << std::endl;
-				LOG_ERROR("Exception at async_run_service(): {0}", e.what());
+				Log::error("Exception at async_run_service(): {0}", e.what());
+				Log::info("Stopping async UDP receiver");  return;
 			}
 		} else
 		{
-			return;
+			Log::info("Stopping async UDP receiver");  return;
 		}
 	}
 public:

@@ -9,16 +9,19 @@ struct DREF
 {
 private:
 	static int serial_id;
-public:
 	int id;
+
+protected:
 	const char* path_;
-	DREF_REQUEST dref_req;
+
+public:
+	DREF_REQUEST dref_request;
 	float value_ = .0f;
 
 	DREF(const char* path, int dref_freq = DEFAULT_DREF_FREQ) : id(serial_id++) {
 		id = serial_id;
 		path_ = path;
-		dref_req = DREF_REQUEST(dref_freq, id, path);
+		dref_request = DREF_REQUEST(dref_freq, id, path);
 	}
 
 	float get() {
