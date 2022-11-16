@@ -20,17 +20,17 @@
 
 <h3 align="center">
     <a href="docs/README.md">Docs</a> - 
-    <a href="https://www.x-plane.com/pro/certified/">FAA X-Plane</a> - 
     <a href="docs/apidoc">API</a> - 
-    <a href="docs/how-to-deploy">Deploy</a>
+    <a href="docs/how-to-deploy">Deploy</a> -
+    <a href="https://www.x-plane.com/pro/certified/">FAA X-Plane</a> 
 <br/>
 </h3>
 
 ## Design Pattern
 <h3>Avionic Control System</h3>  
-<p align="left"><img width="20%" src="./resources/images/acs.svg"> </p>
+<p align="left"><img width="30%" src="./resources/images/acs.svg"> </p>
 
 <h3>Constructor components overview</h3>  
-<p align="left"><img width="70%" src="./resources/images/construct_components_overview.svg"></p>
+<p align="left"><img width="90%" src="./resources/images/construct_components_overview.svg"></p>
 
 
