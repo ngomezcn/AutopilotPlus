@@ -31,6 +31,6 @@
 <p align="left"><img width="30%" src="./resources/images/acs.svg"> </p>
 
 <h3>Constructor components overview</h3>  
-<p align="left"><img width="90%" src="./resources/images/construct_components_overview.svg"></p>
+<p align="left"><img width="100%" src="./resources/images/construct_components_overview.svg"></p>
 
 
