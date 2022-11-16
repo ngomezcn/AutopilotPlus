@@ -1,8 +1,3 @@
-# AutopilotPlus
-
-
-
-
 <p align="center"><img src="https://wallpapercave.com/wp/wp9357389.jpg"></p>
 
 <h1 align="center">Autopilot Plus </h1>
