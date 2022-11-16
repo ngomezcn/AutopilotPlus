@@ -3,7 +3,7 @@
 <h1 align="center">Autopilot Plus </h1>
 
 <h3 align="center">
- System to perform fully autonomous flights, with the extra ability to intercept civilian aircraft
+ Im a software developer that is System to perform fully autonomous flights, with the extra ability to intercept civilian aircrafts
 </h3>
 
 <p align="center">
@@ -14,13 +14,13 @@
 
 <h4 align="center">
   <i>
-     We are not affiliated, associated, authorized, endorsed by, or in any way officially connected with Space Exploration Technologies Corp (SpaceX), or any of its subsidiaries or its affiliates. The names SpaceX as well as related names, marks, emblems and images are registered trademarks of their respective owners.
+    The software is being tested in X-Plane12, which is FAA-certified flight simulation software.
   </i>
 </h4>
 
 <h3 align="center">
     <a href="docs/README.md">Docs</a> - 
-    <a href="docs/why-xplane">X-Plane12</a> - 
+    <a href="https://www.x-plane.com/pro/certified/">FAA X-Plane</a> - 
     <a href="docs/apidoc">API</a> - 
     <a href="docs/how-to-deploy">Deploy</a>
 <br/>
