@@ -34,6 +34,6 @@
 <p align="left"><img width="100%" src="./resources/images/construct_components_overview.svg"></p>
 
 <h3>Avionic Control System Detail</h3>  
-<p align="left"><img width="90%" src="./resources/images/acs_det.svg"></p>
+<p align="left"><img width="80%" src="./resources/images/acs_det.svg"></p>
 
 
