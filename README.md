@@ -3,7 +3,7 @@
 <h1 align="center">Autopilot Plus </h1>
 
 <h3 align="center">
- Im a software developer that is System to perform fully autonomous flights, with the extra ability to intercept civilian aircrafts
+ System to perform fully autonomous flights, with the extra ability to intercept civilian aircrafts
 </h3>
 
 <p align="center">
