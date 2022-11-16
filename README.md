@@ -3,7 +3,7 @@
 <h1 align="center">Autopilot Plus </h1>
 
 <h3 align="center">
- System to perform fully autonomous flights, with the ability to intercept civilian aircraft
+ System to perform fully autonomous flights, with the extra ability to intercept civilian aircraft
 </h3>
 
 <p align="center">
