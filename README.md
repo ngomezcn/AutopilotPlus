@@ -26,11 +26,14 @@
 <br/>
 </h3>
 
-## Design Pattern
+## Software Design
 <h3>Avionic Control System</h3>  
 <p align="left"><img width="30%" src="./resources/images/acs.svg"> </p>
 
 <h3>Constructor components overview</h3>  
 <p align="left"><img width="100%" src="./resources/images/construct_components_overview.svg"></p>
+
+<h3>Avionic Control System Detail</h3>  
+<p align="left"><img width="90%" src="./resources/images/acs_det.svg"></p>
 
 
