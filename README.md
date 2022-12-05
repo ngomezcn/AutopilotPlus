@@ -26,14 +26,21 @@
 <br/>
 </h3>
 
-## Software Design
+## Software architecture
 <h3>Avionic Control System</h3>  
 <p align="left"><img width="30%" src="./resources/images/acs.svg"> </p>
 
-<h3>Constructor components overview</h3>  
+<h3>Components overview</h3>  
 <p align="left"><img width="100%" src="./resources/images/construct_components_overview.svg"></p>
 
-<h3>Avionic Control System Detail</h3>  
+<h3>ACS Detail</h3>  
 <p align="left"><img width="80%" src="./resources/images/acs_det.svg"></p>
 
+## Intercepction of airpline by turning radius
+<h3>Components overview</h3>  
+<p>Limitations:</p>
+- The persecutor cannot reverse it direction to intercept a target
+- The persecutor cannot intercept a target inside its turning-circle
+- The purser may perform at most one complete turn
 
+<p align="left"><img width="100%" src="./resources/images/interceptance_figure.png"></p>
