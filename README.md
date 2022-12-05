@@ -42,7 +42,8 @@
 Diagram showing two possible paths of interception by turning radius. 
 At this diagram pursuer and target have constant speeds <br>
 Pursuer (P) | Target (T) 
-<p align="left"><img width="80%" src="./resources/images/interceptance_figure.png"></p>
+<p align="left"><img width="60%" src="./resources/images/interceptance_figure.png"></p>
+
 - Limitations:
   - The pursuer cannot reverse its direction to intercept a target. 
   - The pursuer cannot intercept a target inside its turning-circle.
