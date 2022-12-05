@@ -34,13 +34,17 @@
 <p align="left"><img width="100%" src="./resources/images/construct_components_overview.svg"></p>
 
 <h3>ACS Detail</h3>  
-<p align="left"><img width="80%" src="./resources/images/acs_det.svg"></p>
+<p align="left"><img width="70%" src="./resources/images/acs_det.svg"></p>
 
 ## Intercepction of airpline by turning radius
-<h3>Components overview</h3>  
-<p>Limitations:</p>
-- The persecutor cannot reverse it direction to intercept a target
-- The persecutor cannot intercept a target inside its turning-circle
-- The purser may perform at most one complete turn
 
-<p align="left"><img width="100%" src="./resources/images/interceptance_figure.png"></p>
+
+Diagram showing two possible paths of interception by turning radius. 
+At this diagram pursuer and target have constant speeds <br>
+Pursuer (P) | Target (T) 
+<p align="left"><img width="80%" src="./resources/images/interceptance_figure.png"></p>
+- Limitations:
+  - The pursuer cannot reverse its direction to intercept a target. 
+  - The pursuer cannot intercept a target inside its turning-circle.
+  - The pursuer may perform at most one complete turn
+  - pursuer speed is greater than the target’s speed (may be is not absolutely necesary)
