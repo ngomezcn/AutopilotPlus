@@ -26,14 +26,26 @@
 <br/>
 </h3>
 
-## Software Design
+## Software architecture
 <h3>Avionic Control System</h3>  
 <p align="left"><img width="30%" src="./resources/images/acs.svg"> </p>
 
-<h3>Constructor components overview</h3>  
+<h3>Components overview</h3>  
 <p align="left"><img width="100%" src="./resources/images/construct_components_overview.svg"></p>
 
-<h3>Avionic Control System Detail</h3>  
-<p align="left"><img width="80%" src="./resources/images/acs_det.svg"></p>
+<h3>ACS Detail</h3>  
+<p align="left"><img width="70%" src="./resources/images/acs_det.svg"></p>
+
+## Intercepction of airpline by turning radius
 
 
+Diagram showing two possible paths of interception by turning radius. 
+At this diagram pursuer and target have constant speeds <br>
+Pursuer (P) | Target (T) 
+<p align="left"><img width="60%" src="./resources/images/interceptance_figure.png"></p>
+
+- Limitations:
+  - The pursuer cannot reverse its direction to intercept a target. 
+  - The pursuer cannot intercept a target inside its turning-circle.
+  - The pursuer may perform at most one complete turn
+  - pursuer speed is greater than the target’s speed (may be is not absolutely necesary)
